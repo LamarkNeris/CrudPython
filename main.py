@@ -1,5 +1,7 @@
+import uvicorn
 from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
+from starlette.middleware.cors import CORSMiddleware
 
 from model.models import Desafiados
 from DBConnection.database import engine, Base, get_db
@@ -10,6 +12,14 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+
+)
 
 @app.post("/api/desafiados", response_model=DesafiadosResponse, status_code=status.HTTP_201_CREATED)
 def create(request: DesafiadosRequest, db: Session = Depends(get_db)):
@@ -41,6 +51,5 @@ def delete(id: int, db: Session = Depends(get_db)):
         )
     DesafiadosRepository.delete(db, id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-
 
 
