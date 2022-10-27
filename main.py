@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 from model.models import Desafiados
 from DBConnection.database import engine, Base, get_db
@@ -11,7 +12,7 @@ from DBConnection.schemas import DesafiadosRequest, DesafiadosResponse
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+app.add_middleware(HTTPSRedirectMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
