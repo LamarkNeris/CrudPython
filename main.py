@@ -3,10 +3,10 @@ from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
 
-from model.models import Desafiados
+from model.models import Funcionarios
 from DBConnection.database import engine, Base, get_db
-from repository.repositories import DesafiadosRepository
-from DBConnection.schemas import DesafiadosRequest, DesafiadosResponse
+from repository.repositories import FuncionariosRepository
+from DBConnection.schemas import FuncionariosRequest, FuncionariosResponse
 
 Base.metadata.create_all(bind=engine)
 
@@ -21,35 +21,34 @@ app.add_middleware(
 
 )
 
-@app.post("/api/desafiados", response_model=DesafiadosResponse, status_code=status.HTTP_201_CREATED)
-def create(request: DesafiadosRequest, db: Session = Depends(get_db)):
-    desafiado = DesafiadosRepository.save(db, Desafiados(**request.dict()))
-    return DesafiadosResponse.from_orm(desafiado)
+
+@app.post("/api/funcionarios", response_model=FuncionariosResponse, status_code=status.HTTP_201_CREATED)
+def create(request: FuncionariosRequest, db: Session = Depends(get_db)):
+    funcionario = FuncionariosRepository.save(db, Funcionarios(**request.dict()))
+    return FuncionariosResponse.from_orm(funcionario)
 
 
-@app.get("/api/desafiados")
+@app.get("/api/funcionarios")
 def read(db: Session = Depends(get_db)):
-    desafiado = DesafiadosRepository.findAll(db)
-    return [DesafiadosResponse.from_orm(desafiado) for desafiado in desafiado]
+    funcionario = FuncionariosRepository.findAll(db)
+    return [FuncionariosResponse.from_orm(funcionario) for funcionario in funcionario]
 
 
-@app.put("/api/desafiados/{id}")
-def update(id: int, request: DesafiadosRequest, db: Session = Depends(get_db)):
-    if not DesafiadosRepository.existsId(db, id):
+@app.put("/api/funcionarios/{id}")
+def update(id: int, request: FuncionariosRequest, db: Session = Depends(get_db)):
+    if not FuncionariosRepository.existsId(db, id):
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Desafiado not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Funcionário not found"
         )
-    desafiado = DesafiadosRepository.save(db, Desafiados(id=id, **request.dict()))
-    return DesafiadosResponse.from_orm(desafiado)
+    funcionario = FuncionariosRepository.save(db, Funcionarios(id=id, **request.dict()))
+    return FuncionariosResponse.from_orm(funcionario)
 
 
-@app.delete("/api/desafiados/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/api/funcionarios/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete(id: int, db: Session = Depends(get_db)):
-    if not DesafiadosRepository.existsId(db, id):
+    if not FuncionariosRepository.existsId(db, id):
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Desafiado not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Funcionário not found"
         )
-    DesafiadosRepository.delete(db, id)
+    FuncionariosRepository.delete(db, id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-
-

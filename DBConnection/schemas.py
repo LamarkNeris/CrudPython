@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 
 
-class DesafiadosBase(BaseModel):
+class FuncionariosBase(BaseModel):
     name: str
     email: str
-    cargo: str
+    function: str
 
 
-class DesafiadosRequest(DesafiadosBase):
+class FuncionariosRequest(FuncionariosBase):
     ...
 
 
-class DesafiadosResponse(DesafiadosBase):
+class FuncionariosResponse(FuncionariosBase):
     id: int
 
     class Config:

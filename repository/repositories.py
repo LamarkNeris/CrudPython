@@ -1,29 +1,29 @@
 from sqlalchemy.orm import Session
 
-from model.models import Desafiados
+from model.models import Funcionarios
 
 
-class DesafiadosRepository:
+class FuncionariosRepository:
     @staticmethod
-    def findAll(db: Session) -> list[Desafiados]:
-        return db.query(Desafiados).all()
+    def findAll(db: Session) -> list[Funcionarios]:
+        return db.query(Funcionarios).all()
 
     @staticmethod
-    def save(db: Session, desafiados: Desafiados) -> Desafiados:
-        if desafiados.id:
-            db.merge(desafiados)
+    def save(db: Session, funcionarios: Funcionarios) -> Funcionarios:
+        if funcionarios.id:
+            db.merge(funcionarios)
         else:
-            db.add(desafiados)
+            db.add(funcionarios)
         db.commit()
-        return desafiados
+        return funcionarios
 
     @staticmethod
     def existsId(db: Session, id: int) -> bool:
-        return db.query(Desafiados).filter(Desafiados.id == id).first() is not None
+        return db.query(Funcionarios).filter(Funcionarios.id == id).first() is not None
 
     @staticmethod
     def delete(db: Session, id: int) -> None:
-        curso = db.query(Desafiados).filter(Desafiados.id == id).first()
-        if curso is not None:
-            db.delete(curso)
+        funcionario = db.query(Funcionarios).filter(Funcionarios.id == id).first()
+        if funcionario is not None:
+            db.delete(funcionario)
             db.commit()
